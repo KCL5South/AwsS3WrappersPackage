@@ -62,7 +62,7 @@ namespace AWSS3FilesCrudHelperPackage
                 return false;
             }
         }
-        public async Task<bool> IsS3FileExists(string bucketName, string key)
+        public async Task<bool> IsS3FileExistsAsync(string bucketName, string key)
         {
             try
             {

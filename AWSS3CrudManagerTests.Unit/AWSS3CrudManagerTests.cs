@@ -21,7 +21,7 @@ namespace BaseProposalTests.Unit
             string key = "";
             _s3ClientMock.Setup(x => x.GetObjectMetadataAsync(It.IsAny<GetObjectMetadataRequest>(), default)).ReturnsAsync(new GetObjectMetadataResponse());
             
-            var result = await _testAWSS3CrudManager.IsS3FileExists(bucketName, key);
+            var result = await _testAWSS3CrudManager.IsS3FileExistsAsync(bucketName, key);
         
             Assert.IsType<bool>(result);
             Assert.True(result);
@@ -37,7 +37,7 @@ namespace BaseProposalTests.Unit
             string key = "";
             _s3ClientMock.Setup(x => x.GetObjectMetadataAsync(It.IsAny<GetObjectMetadataRequest>(), default)).ReturnsAsync(new GetObjectMetadataResponse());
 
-            var result = await _testAWSS3CrudManager.IsS3FileExists(bucketName, key);
+            var result = await _testAWSS3CrudManager.IsS3FileExistsAsync(bucketName, key);
 
             _s3ClientMock.Verify(x => x.GetObjectMetadataAsync(It.IsAny<GetObjectMetadataRequest>(), default), Times.Once);
 
@@ -51,7 +51,7 @@ namespace BaseProposalTests.Unit
             string bucketName = "";
             string key = "" ;
             
-            var result = await _testAWSS3CrudManager.IsS3FileExists(bucketName, key);
+            var result = await _testAWSS3CrudManager.IsS3FileExistsAsync(bucketName, key);
       
             Assert.IsType<bool>(result);
             Assert.False(result);
@@ -67,7 +67,7 @@ namespace BaseProposalTests.Unit
             string bucketName = "";
             string key = "";
 
-            var result = await _testAWSS3CrudManager.IsS3FileExists(bucketName, key);
+            var result = await _testAWSS3CrudManager.IsS3FileExistsAsync(bucketName, key);
 
             Assert.IsType<bool>(result);
             Assert.True(result);
