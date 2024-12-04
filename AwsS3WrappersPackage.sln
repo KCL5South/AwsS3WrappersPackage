@@ -3,9 +3,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.9.34622.214
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AWSS3FilesCrudManager", "AWSS3CrudManagerPackage\AWSS3FilesCrudManager.csproj", "{ACCEBCE8-4F1B-47D0-8F87-777D3F6AB345}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AwsS3Wrappers", "AwsS3WrappersPackage\AwsS3Wrappers.csproj", "{ACCEBCE8-4F1B-47D0-8F87-777D3F6AB345}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AWSS3CrudManagerTests.Unit", "AWSS3CrudManagerTests.Unit\AWSS3CrudManagerTests.Unit.csproj", "{E55DF431-7C47-45EB-9BAD-988C6DE7CA89}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AwsS3WrappersTests.Unit", "AwsS3WrappersTests.Unit\AwsS3WrappersTests.Unit.csproj", "{E55DF431-7C47-45EB-9BAD-988C6DE7CA89}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

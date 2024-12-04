@@ -5,7 +5,7 @@
     <ImplicitUsings>enable</ImplicitUsings>
 	  <Company>Kansas City Life Insurance</Company>
 	  <Authors>Sneha Chitre</Authors>
-	  <Version>1.0.1-rc</Version>
+	  <Version>1.0.1-rc1</Version>
 	  <Description>Services to interact with AWS S3 File Storage</Description>
 	  <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <Nullable>enable</Nullable>

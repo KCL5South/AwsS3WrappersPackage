@@ -7,11 +7,11 @@ using System.Threading.Tasks;
 
 namespace AWSS3FilesCrudManager
 {
-    public interface IAWSS3CrudManager
+    public interface IAwsS3Wrappers
     {
         public Task<bool> UploadFileAsync(byte[] fs, string bucketName, string keyName);
         public Task<bool> DeleteFileAsync(string bucketName, string keyName);
-        public Task<bool> IsS3FileExistsAsync(string bucketName, string key);
+        //private Task<bool> S3FileExistsAsync(string bucketName, string key);
 
         public Task<byte[]> DownloadFileAsync(string bucketName, string key);
 

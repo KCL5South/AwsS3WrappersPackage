@@ -19,7 +19,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\AWSS3CrudManagerPackage\AWSS3FilesCrudManager.csproj" />
+    <ProjectReference Include="..\AwsS3WrappersPackage\AwsS3Wrappers.csproj" />
   </ItemGroup>
 
   <ItemGroup>
