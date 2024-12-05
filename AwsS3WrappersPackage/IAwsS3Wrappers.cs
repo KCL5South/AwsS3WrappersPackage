@@ -11,8 +11,7 @@ namespace AWSS3FilesCrudManager
     {
         public Task<bool> UploadFileAsync(byte[] fs, string bucketName, string keyName);
         public Task<bool> DeleteFileAsync(string bucketName, string keyName);
-        //private Task<bool> S3FileExistsAsync(string bucketName, string key);
-
+        public Task<bool> S3FileExistsAsync(string bucketName, string keyName);
         public Task<byte[]> DownloadFileAsync(string bucketName, string key);
 
     }

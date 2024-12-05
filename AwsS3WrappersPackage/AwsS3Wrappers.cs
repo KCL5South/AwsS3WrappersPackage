@@ -21,7 +21,7 @@ namespace AWSS3FilesCrudHelperPackage
                     Key = keyName // <-- in S3 key represents a path
                 }; 
 
-                await _s3Client.PutObjectAsync(request);
+               await _s3Client.PutObjectAsync(request);
 
                 return true;
             }
@@ -36,8 +36,6 @@ namespace AWSS3FilesCrudHelperPackage
 
         public async Task<bool> DeleteFileAsync(string bucketName, string keyName)
         {
-            try
-            {
                 if (await S3FileExistsAsync(bucketName, keyName))
                 {
                     var deleteObjectRequest = new DeleteObjectRequest
@@ -53,18 +51,11 @@ namespace AWSS3FilesCrudHelperPackage
                 }
                 else return false;
             }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Error encountered on server. Message:'{ex.Message}' when deleting an object.");
-                return false;
-            }
-        
-        }
+
         public async Task<bool> S3FileExistsAsync(string bucketName, string key)
         {
             try
             {
-
                 var request = new GetObjectMetadataRequest()
                 {
                     BucketName = bucketName,
@@ -78,7 +69,6 @@ namespace AWSS3FilesCrudHelperPackage
             }
             catch
             {
-
                 return false;
             }
         }
@@ -86,31 +76,24 @@ namespace AWSS3FilesCrudHelperPackage
         public async Task<byte[]> DownloadFileAsync(string bucketName, string key)
         {
 
-            try
+
+            if (await S3FileExistsAsync(bucketName, key))
             {
-                if (await S3FileExistsAsync(bucketName, key))
+                GetObjectRequest getObjectRequest = new()
                 {
-                    GetObjectRequest getObjectRequest = new()
-                    {
-                        BucketName = bucketName,
-                        Key = key
-                    };
+                    BucketName = bucketName,
+                    Key = key
+                };
 
-                    using var objResp = await _s3Client.GetObjectAsync(getObjectRequest);
-                    using var memoryStream = new MemoryStream();
-                    await objResp.ResponseStream.CopyToAsync(memoryStream);
+                using var objResp = await _s3Client.GetObjectAsync(getObjectRequest);
+                using var memoryStream = new MemoryStream();
+                await objResp.ResponseStream.CopyToAsync(memoryStream);
 
 
-                    return memoryStream.ToArray();
-                }
-                else return [];
-                
+                return memoryStream.ToArray();
             }
-            catch(Exception e)
-            {
-                Console.WriteLine("Error encountered while donwloading file. Message:'{0}'", e.Message);
-                throw;      
-            }
+            else throw new Exception("Error encountered while downaloding the file");
+
         }
     }
 }
