@@ -1,11 +1,11 @@
 ﻿
 using Amazon.S3;
 using Amazon.S3.Model;
-using AWSS3FilesCrudManager;
+using AwsS3WrappersPackage;
 using System.ComponentModel.Design;
 
 
-namespace AWSS3FilesCrudHelperPackage
+namespace AwsS3WrappersPackage
 {
     public class AwsS3Wrappers(IAmazonS3 _s3Client) : IAwsS3Wrappers
     {
@@ -52,7 +52,7 @@ namespace AWSS3FilesCrudHelperPackage
                 else return false;
             }
 
-        private async Task<bool> S3FileExistsAsync(string bucketName, string key)
+         async Task<bool> S3FileExistsAsync(string bucketName, string key)
         {
             try
             {

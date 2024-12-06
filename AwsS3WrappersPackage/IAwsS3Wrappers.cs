@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace AWSS3FilesCrudManager
+namespace AwsS3WrappersPackage
 {
     public interface IAwsS3Wrappers
     {

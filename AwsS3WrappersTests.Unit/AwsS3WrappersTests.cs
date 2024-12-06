@@ -1,14 +1,13 @@
 ﻿using Amazon;
 using Amazon.S3;
 using Amazon.S3.Model;
-using AWSS3FilesCrudHelperPackage;
-using AWSS3FilesCrudManager;
+using AwsS3WrappersPackage;
 using Moq;
 
 
-namespace BaseProposalTests.Unit
+namespace AwsS3WrappersTests.Unit
 {
-    public class AWSS3CrudManagerTests
+    public class AwsS3WrappersTests
     {
         public class TestAwsS3Wrappers(IAmazonS3 _S3Client) : AwsS3Wrappers(_S3Client) { }
 
