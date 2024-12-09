@@ -1,13 +1,11 @@
 ﻿
 using Amazon.S3;
 using Amazon.S3.Model;
-using AwsS3WrappersPackage;
-using System.ComponentModel.Design;
 
 
-namespace AwsS3WrappersPackage
+namespace AwsS3Wrappers
 {
-    public class AwsS3Wrappers(IAmazonS3 _s3Client) : IAwsS3Wrappers
+    public class AwsS3Wrapper(IAmazonS3 _s3Client) : IAwsS3Wrapper
     {
         public async Task<bool> UploadFileAsync(byte[] file, string bucketName, string keyName)
         {

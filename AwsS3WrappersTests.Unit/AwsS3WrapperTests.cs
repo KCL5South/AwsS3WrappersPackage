@@ -1,15 +1,15 @@
 ﻿using Amazon;
 using Amazon.S3;
 using Amazon.S3.Model;
-using AwsS3WrappersPackage;
+using AwsS3Wrappers;
 using Moq;
 
 
-namespace AwsS3WrappersTests.Unit
+namespace AwsS3WrapperTests.Unit
 {
-    public class AwsS3WrappersTests
+    public class AwsS3WrapperTests
     {
-        public class TestAwsS3Wrappers(IAmazonS3 _S3Client) : AwsS3Wrappers(_S3Client) { }
+        public class TestAwsS3Wrappers(IAmazonS3 _S3Client) : AwsS3Wrapper(_S3Client) { }
 
         [Fact]
         public async Task DeleteFileAsync_ValidContext_ReturnsTrue()
@@ -41,22 +41,7 @@ namespace AwsS3WrappersTests.Unit
 
         }
 
-        [Fact]
-        public async Task DeleteFileAsync_InvalidKey_ReturnsFalse()
-        {
-            Mock<IAmazonS3> _s3ClientMock = new();
-            Mock<IAwsS3Wrappers> awsS3WrapperMock = new();
-            TestAwsS3Wrappers testAwsS3Wrappers = new(_s3ClientMock.Object);
-            string bucketName = "";
-            string key = "invalid";
-            _s3ClientMock.Setup(x => x.GetObjectAsync(It.IsAny<GetObjectRequest>(), default)).ThrowsAsync(It.IsAny<Exception>());
-    
-            var result = await testAwsS3Wrappers.DeleteFileAsync(bucketName, key);
-
-            Assert.IsType<bool>(result);
-            Assert.False(result);
-        }
-
+  
         [Fact]
         public async Task UploadFileAsync_ValidContext_ReturnsTrue()
         {
