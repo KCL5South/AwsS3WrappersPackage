@@ -50,7 +50,7 @@ namespace AwsS3Wrappers
                 else return false;
             }
 
-         async Task<bool> S3FileExistsAsync(string bucketName, string key)
+        private async Task<bool> S3FileExistsAsync(string bucketName, string key)
         {
             try
             {
@@ -61,7 +61,7 @@ namespace AwsS3Wrappers
 
                 };
 
-                var result = await _s3Client.GetObjectMetadataAsync(request);
+                await _s3Client.GetObjectMetadataAsync(request);
 
                 return true;
             }
