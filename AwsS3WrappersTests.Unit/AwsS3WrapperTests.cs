@@ -9,33 +9,50 @@ namespace AwsS3WrapperTests.Unit
 {
     public class AwsS3WrapperTests
     {
-        public class TestAwsS3Wrappers(IAmazonS3 _S3Client) : AwsS3Wrapper(_S3Client) { }
+        //public class TestAwsS3Wrappers(IAmazonS3 _S3Client) : AwsS3Wrapper(_S3Client) { }
+
+        private readonly Mock<IAmazonS3> _s3ClientMock = new();
 
         [Fact]
-        public async Task DeleteFileAsync_ValidContext_ReturnsTrue()
+        public async Task DeleteFileAsync_S3FileExistsAsyncReturnsTrue_ReturnsTrue()
         {
-            Mock<IAmazonS3> _s3ClientMock = new();
+          
+            AwsS3Wrapper awsS3Wrapper = new(_s3ClientMock.Object);
             _s3ClientMock.Setup(x => x.DeleteObjectAsync(It.IsAny<DeleteObjectRequest>(), default)).ReturnsAsync(new DeleteObjectResponse());
-            TestAwsS3Wrappers testAwsS3Wrappers = new(_s3ClientMock.Object);
+            
             string bucketName = "";
             string key = "";
 
-            var result = await testAwsS3Wrappers.DeleteFileAsync(bucketName, key);
+            var result = await awsS3Wrapper.DeleteFileAsync(bucketName, key);
 
             Assert.IsType<bool>(result);
             Assert.True(result);
         }
 
         [Fact]
-        public async Task DeleteFileAsync_DeleteObjectAsync_IsCalledExactlyOnce()
+        public async Task DeleteFileAsync_S3FileExistsAsyncReturnsFalse_ReturnsFalse()
         {
-            Mock<IAmazonS3> _s3ClientMock = new();
-            TestAwsS3Wrappers testAwsS3Wrappers = new(_s3ClientMock.Object);
+
+            AwsS3Wrapper awsS3Wrapper = new(_s3ClientMock.Object);
+            string bucketName = "";
+            string key = "";
+            _s3ClientMock.Setup(x => x.GetObjectMetadataAsync(It.IsAny<GetObjectMetadataRequest>(),default)).ThrowsAsync(new Exception("The specified key does not exist."));
+
+            var result = await awsS3Wrapper.DeleteFileAsync(bucketName, key);
+
+            Assert.IsType<bool>(result);
+            Assert.False(result);
+        }
+
+        [Fact]
+        public async Task DeleteFileAsync_S3FileExistsAsyncReturnsTrue_DeleteObjectAsyncIsCalledExactlyOnce()
+        {
+            AwsS3Wrapper awsS3Wrapper  = new(_s3ClientMock.Object);
             string bucketName = "";
             string key = "";
             _s3ClientMock.Setup(x => x.DeleteObjectAsync(It.IsAny<DeleteObjectRequest>(), default)).ReturnsAsync(new DeleteObjectResponse());
 
-            var result = await testAwsS3Wrappers.DeleteFileAsync(bucketName, key);
+            var result = await awsS3Wrapper.DeleteFileAsync(bucketName, key);
 
             _s3ClientMock.Verify(x => x.DeleteObjectAsync(It.IsAny<DeleteObjectRequest>(), default), Times.Once);
 
@@ -43,78 +60,45 @@ namespace AwsS3WrapperTests.Unit
 
   
         [Fact]
-        public async Task UploadFileAsync_ValidContext_ReturnsTrue()
+        public async Task UploadFileAsync_NoExceptionThrown_ReturnsTrue()
         {
-            Mock<IAmazonS3> _s3ClientMock = new();
+           
             _s3ClientMock.Setup(x => x.PutObjectAsync(It.IsAny<PutObjectRequest>(), default));
             byte[] testByteArray = new byte[64];
 
-            TestAwsS3Wrappers testAwsS3Wrappers = new(_s3ClientMock.Object);
+            AwsS3Wrapper awsS3Wrapper = new(_s3ClientMock.Object);
             string bucketName = "";
             string key = "";
 
-            var result = await testAwsS3Wrappers.UploadFileAsync(testByteArray, bucketName, key);
+            var result = await awsS3Wrapper.UploadFileAsync(testByteArray, bucketName, key);
 
             Assert.IsType<bool>(result);
             Assert.True(result);
 
         }
-        [Fact]
-        public async Task UploadFileAsync_PutObjectAsync_IsCalledExactlyOnce()
-        {
-            Mock<IAmazonS3> _s3ClientMock = new();
-            TestAwsS3Wrappers testAwsS3Wrappers = new(_s3ClientMock.Object);
-            string bucketName = "";
-            string key = "";
-            byte[] testByteArray = new byte[64];
-            _s3ClientMock.Setup(x => x.PutObjectAsync(It.IsAny<PutObjectRequest>(), default)).ReturnsAsync(new PutObjectResponse());
-
-            var result = await testAwsS3Wrappers.UploadFileAsync(testByteArray, bucketName, key);
-
-            _s3ClientMock.Verify(x => x.PutObjectAsync(It.IsAny<PutObjectRequest>(), default), Times.Once);
-
-        }
+    
 
         [Fact]
-        public async Task UploadFileAsync_InvalidContext_ReturnsFalseInCaseOfAmazonException()
+        public async Task UploadFileAsync_PutObjectAsyncThrowsException_ReturnsFalse()
         {
-            Mock<IAmazonS3> _s3ClientMock = new();
             _s3ClientMock.Setup(x => x.PutObjectAsync(It.IsAny<PutObjectRequest>(), default)).ThrowsAsync(new Exception("some exception"));
             byte[] testByteArray = new byte[64];
-            TestAwsS3Wrappers testAwsS3Wrappers = new(_s3ClientMock.Object);
+            AwsS3Wrapper awsS3Wrapper = new(_s3ClientMock.Object);
             string bucketName = "";
             string key = "";
 
-            var result = await testAwsS3Wrappers.UploadFileAsync(testByteArray, bucketName, key);
+            var result = await awsS3Wrapper.UploadFileAsync(testByteArray, bucketName, key);
 
             Assert.IsType<bool>(result);
             Assert.False(result);
 
         }
 
-        [Fact]
-        public async Task UploadFileAsync_InvalidContext_ReturnsFalseInCaseOfGenericException()
-        {
-            Mock<IAmazonS3> _s3ClientMock = new();
-            _s3ClientMock.Setup(x => x.PutObjectAsync(It.IsAny<PutObjectRequest>(), default)).ThrowsAsync(new Exception(""));
-            byte[] testByteArray = new byte[64];
-
-            TestAwsS3Wrappers testAwsS3Wrappers = new(_s3ClientMock.Object);
-            string bucketName = "";
-            string key = "";
-
-            var result = await testAwsS3Wrappers.UploadFileAsync(testByteArray, bucketName, key);
-
-            Assert.IsType<bool>(result);
-            Assert.False(result);
-        }
 
         [Fact]
-        public async Task DownloadFile_ValidKey_ReturnsFileByteArray()
+        public async Task DownloadFile_S3FileExistsAsyncReturnsTrue_ReturnsFileByteArray()
         {
-            Mock<IAmazonS3> _s3ClientMock = new();
-
-            TestAwsS3Wrappers testAwsS3Wrappers = new(_s3ClientMock.Object);
+            AwsS3Wrapper awsS3Wrapper = new(_s3ClientMock.Object);
             string bucketName = "";
             string key = "";
             var expectedBytes = new byte[] { 1, 2, 3, 4 };
@@ -125,31 +109,29 @@ namespace AwsS3WrapperTests.Unit
             };
 
             _s3ClientMock.Setup(x => x.GetObjectAsync(It.IsAny<GetObjectRequest>(), default)).ReturnsAsync(expResponse);
-            var result = await testAwsS3Wrappers.DownloadFileAsync(bucketName, key);
+            var result = await awsS3Wrapper.DownloadFileAsync(bucketName, key);
 
             Assert.IsType<byte[]>(result);
             Assert.Equal(expectedBytes, result);
         }
-
         [Fact]
-        public void DownloadFileAsync_InvalidKey_ReturnsException()
+        public async Task DownloadFile_S3FileExistsAsyncReturnsFalse_ReturnsExceptionWithMessage()
         {
-            Mock<IAmazonS3> _s3ClientMock = new();
-
-            _s3ClientMock.Setup(x => x.GetObjectAsync(It.IsAny<GetObjectRequest>(), default)).ThrowsAsync(It.IsAny<Exception>());
-            TestAwsS3Wrappers testAwsS3Wrappers = new(_s3ClientMock.Object);
+            AwsS3Wrapper awsS3Wrapper = new(_s3ClientMock.Object);
             string bucketName = "";
             string key = "";
-          
-            Assert.ThrowsAsync<Exception>(() => testAwsS3Wrappers.DownloadFileAsync(bucketName, key));
+            string errorMessage = "Error encountered while downloading the file";
+
+            _s3ClientMock.Setup(x => x.GetObjectMetadataAsync(It.IsAny<GetObjectMetadataRequest>(), default)).ThrowsAsync(new Exception("The specified key does not exist."));
+
+            var exception = await Assert.ThrowsAsync<Exception>(()=> awsS3Wrapper.DownloadFileAsync(bucketName, key));
+            Assert.Equal(errorMessage, exception.Message);
         }
 
         [Fact]
-        public async Task DownloadFileAsync_GetObjectAsync_IsCalledExactlyOnce()
+        public async Task DownloadFileAsync_S3FileExistsAsyncReturnsTrue_GetObjectAsyncIsCalledExactlyOnce()
         {
-            Mock<IAmazonS3> _s3ClientMock = new();
-
-            TestAwsS3Wrappers testAwsS3Wrappers = new(_s3ClientMock.Object);
+            AwsS3Wrapper awsS3Wrapper = new(_s3ClientMock.Object);
             string bucketName = "";
             string key = "";
             var expectedBytes = new byte[] { 1, 2, 3, 4 };
@@ -159,7 +141,7 @@ namespace AwsS3WrapperTests.Unit
                 ResponseStream = expResponseStream
             };
             _s3ClientMock.Setup(x => x.GetObjectAsync(It.IsAny<GetObjectRequest>(), default)).ReturnsAsync(expResponse);
-            var result = await testAwsS3Wrappers.DownloadFileAsync(bucketName, key);
+            var result = await awsS3Wrapper.DownloadFileAsync(bucketName, key);
 
             _s3ClientMock.Verify(x => x.GetObjectAsync(It.IsAny<GetObjectRequest>(), default), Times.Once);
 

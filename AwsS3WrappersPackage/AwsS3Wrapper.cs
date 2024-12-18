@@ -90,7 +90,7 @@ namespace AwsS3Wrappers
 
                 return memoryStream.ToArray();
             }
-            else throw new Exception("Error encountered while downaloding the file");
+            else throw new Exception("Error encountered while downloading the file");
 
         }
     }
