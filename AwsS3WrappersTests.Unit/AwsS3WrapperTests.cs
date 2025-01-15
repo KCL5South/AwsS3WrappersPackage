@@ -9,8 +9,6 @@ namespace AwsS3WrapperTests.Unit
 {
     public class AwsS3WrapperTests
     {
-        //public class TestAwsS3Wrappers(IAmazonS3 _S3Client) : AwsS3Wrapper(_S3Client) { }
-
         private readonly Mock<IAmazonS3> _s3ClientMock = new();
 
         [Fact]
